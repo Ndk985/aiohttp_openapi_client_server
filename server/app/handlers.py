@@ -1,8 +1,10 @@
 """Обработчики HTTP запросов."""
 
 from aiohttp.web import Request, Response, json_response
+from marshmallow import ValidationError
 
 from .database import db
+from .schemas import TaskCreateSchema, TaskSchema, TaskUpdateSchema
 
 
 async def health_handler(request: Request) -> Response:
@@ -14,15 +16,21 @@ async def create_task_handler(request: Request) -> Response:
     """Создает новую задачу. Endpoint: POST /tasks"""
     try:
         data = await request.json()
-        title = data.get("title")
-        description = data.get("description")
-        status = data.get("status", "pending")
+        schema = TaskCreateSchema()
 
-        if not title:
-            return json_response({"error": "Title is required"}, status=400)
+        try:
+            validated_data = schema.load(data)
+        except ValidationError as e:
+            return json_response({"error": "Validation failed", "details": e.messages}, status=400)
 
-        task = await db.create_task(title, description, status)
-        return json_response(task, status=201)
+        task = await db.create_task(
+            validated_data["title"],
+            validated_data.get("description"),
+            validated_data.get("status", "pending"),
+        )
+
+        result_schema = TaskSchema()
+        return json_response(result_schema.dump(task), status=201)
     except Exception as e:
         return json_response({"error": str(e)}, status=500)
 
@@ -36,7 +44,8 @@ async def get_task_handler(request: Request) -> Response:
         if not task:
             return json_response({"error": "Task not found"}, status=404)
 
-        return json_response(task)
+        schema = TaskSchema()
+        return json_response(schema.dump(task))
     except ValueError:
         return json_response({"error": "Invalid task ID"}, status=400)
     except Exception as e:
@@ -48,18 +57,25 @@ async def update_task_handler(request: Request) -> Response:
     try:
         task_id = int(request.match_info["id"])
         data = await request.json()
+        schema = TaskUpdateSchema()
+
+        try:
+            validated_data = schema.load(data)
+        except ValidationError as e:
+            return json_response({"error": "Validation failed", "details": e.messages}, status=400)
 
         task = await db.update_task(
             task_id,
-            title=data.get("title"),
-            description=data.get("description"),
-            status=data.get("status"),
+            title=validated_data.get("title"),
+            description=validated_data.get("description"),
+            status=validated_data.get("status"),
         )
 
         if not task:
             return json_response({"error": "Task not found"}, status=404)
 
-        return json_response(task)
+        result_schema = TaskSchema()
+        return json_response(result_schema.dump(task))
     except ValueError:
         return json_response({"error": "Invalid task ID"}, status=400)
     except Exception as e:
