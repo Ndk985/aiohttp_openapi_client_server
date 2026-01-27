@@ -1,0 +1,70 @@
+# Python
+# __pycache__ - директория, где Python хранит скомпилированные .pyc файлы
+# Эти файлы создаются автоматически при импорте модулей и не нужны в репозитории
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Виртуальное окружение
+# venv/ - директория с виртуальным окружением Python
+# Её не нужно коммитить, каждый разработчик создает свою локально
+venv/
+env/
+ENV/
+.venv
+
+# Распределение пакетов
+# build/, dist/, *.egg-info/ - директории, создаваемые при сборке пакетов
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE и редакторы
+# Файлы настроек IDE не нужны в репозитории
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Тестирование
+# .pytest_cache/ - кеш pytest для ускорения запуска тестов
+# .coverage, htmlcov/ - отчеты о покрытии кода тестами
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# База данных
+# *.db, *.sqlite - файлы базы данных SQLite
+# Их не коммитим, так как БД создается при первом запуске
+*.db
+*.sqlite
+*.sqlite3
+
+# Сгенерированный клиент
+# client/generated/ - директория с автогенерированным кодом клиента
+# Этот код можно перегенерировать из OpenAPI спецификации
+client/generated/
+
+# Операционная система
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+# Логи
+*.log
