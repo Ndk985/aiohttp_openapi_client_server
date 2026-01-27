@@ -4,6 +4,7 @@ from aiohttp import web
 from aiohttp.web import Application
 
 from .database import db
+from .openapi import setup_openapi
 from .routes import setup_routes
 
 
@@ -21,6 +22,7 @@ def create_app() -> Application:
     """Создает и настраивает aiohttp приложение."""
     app = web.Application()
     setup_routes(app)
+    setup_openapi(app)
     app.on_startup.append(init_db)
     app.on_cleanup.append(close_db)
     return app

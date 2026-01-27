@@ -1,17 +1,26 @@
 """Обработчики HTTP запросов."""
 
 from aiohttp.web import Request, Response, json_response
+from aiohttp_apispec import docs, marshal_with, use_kwargs
 from marshmallow import ValidationError
 
 from .database import db
 from .schemas import TaskCreateSchema, TaskSchema, TaskUpdateSchema
 
 
+@docs(tags=["health"], summary="Health check", description="Проверка работоспособности сервера")
 async def health_handler(request: Request) -> Response:
     """Обработчик для проверки работоспособности сервера. Endpoint: GET /health"""
     return json_response({"status": "ok", "message": "Server is running"})
 
 
+@docs(
+    tags=["tasks"],
+    summary="Создать задачу",
+    description="Создает новую задачу с указанными параметрами",
+)
+@use_kwargs(TaskCreateSchema, location="json")
+@marshal_with(TaskSchema, code=201, description="Задача успешно создана")
 async def create_task_handler(request: Request) -> Response:
     """Создает новую задачу. Endpoint: POST /tasks"""
     try:
@@ -35,6 +44,8 @@ async def create_task_handler(request: Request) -> Response:
         return json_response({"error": str(e)}, status=500)
 
 
+@docs(tags=["tasks"], summary="Получить задачу", description="Получает задачу по её ID")
+@marshal_with(TaskSchema, code=200, description="Задача найдена")
 async def get_task_handler(request: Request) -> Response:
     """Получает задачу по ID. Endpoint: GET /tasks/{id}"""
     try:
@@ -52,6 +63,9 @@ async def get_task_handler(request: Request) -> Response:
         return json_response({"error": str(e)}, status=500)
 
 
+@docs(tags=["tasks"], summary="Обновить задачу", description="Обновляет задачу по её ID")
+@use_kwargs(TaskUpdateSchema, location="json")
+@marshal_with(TaskSchema, code=200, description="Задача успешно обновлена")
 async def update_task_handler(request: Request) -> Response:
     """Обновляет задачу по ID. Endpoint: PUT /tasks/{id}"""
     try:
@@ -82,6 +96,7 @@ async def update_task_handler(request: Request) -> Response:
         return json_response({"error": str(e)}, status=500)
 
 
+@docs(tags=["tasks"], summary="Удалить задачу", description="Удаляет задачу по её ID")
 async def delete_task_handler(request: Request) -> Response:
     """Удаляет задачу по ID. Endpoint: DELETE /tasks/{id}"""
     try:
