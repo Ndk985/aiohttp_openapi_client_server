@@ -152,3 +152,6 @@ media/
 
 # Others
 node_modules
+
+# Сгенерированный клиент (не коммитим, генерируется из OpenAPI спецификации)
+client/generated/

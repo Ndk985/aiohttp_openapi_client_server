@@ -1,0 +1,180 @@
+info:
+  description: REST API для управления задачами (tasks)
+  title: Tasks API
+  version: 1.0.0
+paths:
+  /health:
+    head:
+      responses: {}
+      parameters: []
+      tags:
+      - health
+      summary: Health check
+      description: Проверка работоспособности сервера
+      produces:
+      - application/json
+    get:
+      responses: {}
+      parameters: []
+      tags:
+      - health
+      summary: Health check
+      description: Проверка работоспособности сервера
+      produces:
+      - application/json
+  /tasks:
+    post:
+      responses:
+        '201':
+          schema:
+            $ref: '#/definitions/Task'
+          description: Задача успешно создана
+      parameters:
+      - in: body
+        required: false
+        name: body
+        schema:
+          $ref: '#/definitions/TaskCreate'
+      tags:
+      - tasks
+      summary: Создать задачу
+      description: Создает новую задачу с указанными параметрами
+      produces:
+      - application/json
+  /tasks/{id}:
+    head:
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/Task'
+          description: Задача найдена
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+      tags:
+      - tasks
+      summary: Получить задачу
+      description: Получает задачу по её ID
+      produces:
+      - application/json
+    get:
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/Task'
+          description: Задача найдена
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+      tags:
+      - tasks
+      summary: Получить задачу
+      description: Получает задачу по её ID
+      produces:
+      - application/json
+    put:
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/Task'
+          description: Задача успешно обновлена
+      parameters:
+      - in: body
+        required: false
+        name: body
+        schema:
+          $ref: '#/definitions/TaskUpdate'
+      - in: path
+        name: id
+        required: true
+        type: string
+      tags:
+      - tasks
+      summary: Обновить задачу
+      description: Обновляет задачу по её ID
+      produces:
+      - application/json
+    delete:
+      responses: {}
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+      tags:
+      - tasks
+      summary: Удалить задачу
+      description: Удаляет задачу по её ID
+      produces:
+      - application/json
+swagger: '2.0'
+definitions:
+  TaskCreate:
+    type: object
+    properties:
+      title:
+        type: string
+        minLength: 1
+        maxLength: 200
+      description:
+        type: string
+        x-nullable: true
+        maxLength: 1000
+      status:
+        type: string
+        default: pending
+        enum:
+        - pending
+        - in_progress
+        - completed
+    required:
+    - title
+  Task:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        readOnly: true
+      title:
+        type: string
+      description:
+        type: string
+        x-nullable: true
+      status:
+        type: string
+        enum:
+        - pending
+        - in_progress
+        - completed
+      created_at:
+        type: string
+        readOnly: true
+    required:
+    - created_at
+    - id
+    - status
+    - title
+  TaskUpdate:
+    type: object
+    properties:
+      title:
+        type: string
+        x-nullable: true
+        minLength: 1
+        maxLength: 200
+      description:
+        type: string
+        x-nullable: true
+        maxLength: 1000
+      status:
+        type: string
+        enum:
+        - pending
+        - in_progress
+        - completed
+        x-nullable: true

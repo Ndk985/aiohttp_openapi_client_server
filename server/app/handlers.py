@@ -8,7 +8,11 @@ from .database import db
 from .schemas import TaskCreateSchema, TaskSchema, TaskUpdateSchema
 
 
-@docs(tags=["health"], summary="Health check", description="Проверка работоспособности сервера")
+@docs(
+    tags=["health"],
+    summary="Health check",
+    description="Проверка работоспособности сервера",
+)
 async def health_handler(request: Request) -> Response:
     """Обработчик для проверки работоспособности сервера. Endpoint: GET /health"""
     return json_response({"status": "ok", "message": "Server is running"})
@@ -96,7 +100,11 @@ async def update_task_handler(request: Request) -> Response:
         return json_response({"error": str(e)}, status=500)
 
 
-@docs(tags=["tasks"], summary="Удалить задачу", description="Удаляет задачу по её ID")
+@docs(
+    tags=["tasks"],
+    summary="Удалить задачу",
+    description="Удаляет задачу по её ID",
+)
 async def delete_task_handler(request: Request) -> Response:
     """Удаляет задачу по ID. Endpoint: DELETE /tasks/{id}"""
     try:
