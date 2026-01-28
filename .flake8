@@ -8,5 +8,6 @@ exclude =
     build,
     dist,
     *.egg-info,
-    client/generated
+    client/generated,
+    docs
 ignore = E203,E501,W503

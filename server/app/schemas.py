@@ -21,7 +21,7 @@ class TaskCreateSchema(Schema):
     title = fields.String(required=True, validate=validate.Length(min=1, max=200))
     description = fields.String(allow_none=True, validate=validate.Length(max=1000))
     status = fields.String(
-        missing="pending", validate=validate.OneOf(["pending", "in_progress", "completed"])
+        load_default="pending", validate=validate.OneOf(["pending", "in_progress", "completed"])
     )
 
 

@@ -1,6 +1,5 @@
 """Скрипт для генерации Python клиента из OpenAPI спецификации."""
 
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -23,11 +22,12 @@ def check_java():
         if result.stderr:
             version_info = result.stderr.split("\n")[0]
             print(f"[OK] Java найдена: {version_info}")
-            
+
             # Парсим версию Java
             version_line = result.stderr.split("\n")[0]
             # Ищем паттерн типа "version "1.8.0" или "openjdk version "11.0.2"
             import re
+
             version_match = re.search(r'version ["\']?(\d+)', version_line)
             if version_match:
                 java_major_version = int(version_match.group(1))
@@ -85,7 +85,8 @@ def check_openapi_generator():
 
     # Проверяем, установлен ли пакет через pip
     try:
-        import openapi_generator_cli
+        import openapi_generator_cli  # noqa: F401
+
         print("[OK] Пакет openapi_generator_cli найден через import")
     except ImportError:
         pass
@@ -128,13 +129,16 @@ def check_openapi_generator():
                     else:
                         # Проверяем на ошибку версии Java
                         error_output = result.stderr + result.stdout
-                        if "UnsupportedClassVersionError" in error_output or "class file version" in error_output:
-                            print(f"[ERROR] Проблема с версией Java при запуске генератора:")
+                        if (
+                            "UnsupportedClassVersionError" in error_output
+                            or "class file version" in error_output
+                        ):
+                            print("[ERROR] Проблема с версией Java при запуске генератора:")
                             print(f"   {error_output[:400]}")
                             print("\n   Генератор требует Java 11 или выше.")
                             print("   Обновите Java и попробуйте снова.")
                             return False
-                        
+
                         # Если код возврата не 0, проверяем вывод на наличие версии
                         output = (result.stdout + result.stderr).lower()
                         if "version" in output or any(x in output for x in ["7.", "6.", "5."]):
@@ -181,8 +185,11 @@ def check_openapi_generator():
                 return True
             else:
                 error_output = result.stderr + result.stdout
-                if "UnsupportedClassVersionError" in error_output or "class file version" in error_output:
-                    print(f"[ERROR] Проблема с версией Java:")
+                if (
+                    "UnsupportedClassVersionError" in error_output
+                    or "class file version" in error_output
+                ):
+                    print("[ERROR] Проблема с версией Java:")
                     print(f"   {error_output[:400]}")
                     print("\n   Генератор требует Java 11 или выше.")
                     return False
@@ -253,17 +260,17 @@ def generate_client():
             if result.stderr:
                 print(f"\nДетали ошибки:\n{result.stderr[:500]}")
             return False
-        
+
         if result.returncode == 0:
             print("[OK] Команда выполнена успешно!")
-            
+
             # Проверяем, что файлы действительно созданы
             py_files = list(OUTPUT_DIR.rglob("*.py"))
             if py_files:
-                print(f"[OK] Клиент успешно сгенерирован!")
+                print("[OK] Клиент успешно сгенерирован!")
                 print(f"Клиент находится в: {OUTPUT_DIR}")
                 print(f"Создано Python файлов: {len(py_files)}")
-                print(f"\nПримеры файлов:")
+                print("\nПримеры файлов:")
                 for py_file in sorted(py_files)[:5]:
                     rel_path = py_file.relative_to(OUTPUT_DIR)
                     print(f"   - {rel_path}")

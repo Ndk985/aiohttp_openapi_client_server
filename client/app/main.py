@@ -47,7 +47,7 @@ async def main():
                 status="pending",
             )
             created_task = await tasks_api.tasks_post(task_create)
-            print(f"[OK] Задача создана:")
+            print("[OK] Задача создана:")
             print(f"    ID: {created_task.id}")
             print(f"    Title: {created_task.title}")
             print(f"    Status: {created_task.status}")
@@ -57,7 +57,7 @@ async def main():
             print("\n2. ПОЛУЧЕНИЕ ЗАДАЧИ ПО ID")
             print("-" * 60)
             task = await tasks_api.tasks_id_get(task_id)
-            print(f"[OK] Задача получена:")
+            print("[OK] Задача получена:")
             print(f"    ID: {task.id}")
             print(f"    Title: {task.title}")
             print(f"    Description: {task.description}")
@@ -68,7 +68,7 @@ async def main():
             print("-" * 60)
             task_update = TaskUpdate(status="in_progress")
             updated_task = await tasks_api.tasks_id_put(task_id, task_update)
-            print(f"[OK] Задача обновлена:")
+            print("[OK] Задача обновлена:")
             print(f"    Status изменен на: {updated_task.status}")
 
             print("\n4. ОБНОВЛЕНИЕ ЗАДАЧИ (полное)")
@@ -79,7 +79,7 @@ async def main():
                 status="completed",
             )
             updated_task_full = await tasks_api.tasks_id_put(task_id, task_update_full)
-            print(f"[OK] Задача обновлена:")
+            print("[OK] Задача обновлена:")
             print(f"    Title: {updated_task_full.title}")
             print(f"    Description: {updated_task_full.description}")
             print(f"    Status: {updated_task_full.status}")
@@ -95,17 +95,18 @@ async def main():
                 await tasks_api.tasks_id_get(task_id)
                 print("[ERROR] Задача не должна была быть найдена!")
             except ApiException as e:
-                print(f"[OK] Ожидаемая ошибка (задача не найдена):")
+                print("[OK] Ожидаемая ошибка (задача не найдена):")
                 print(f"    HTTP {e.status}: {e.reason}")
 
         except ApiException as e:
-            print(f"\n[ERROR] Ошибка API:")
+            print("\n[ERROR] Ошибка API:")
             print(f"    HTTP {e.status}: {e.reason}")
             print(f"    Тело ответа: {e.body}")
         except Exception as e:
             print(f"\n[ERROR] Неожиданная ошибка: {e}")
             print(f"    Тип ошибки: {type(e).__name__}")
             import traceback
+
             traceback.print_exc()
 
     print("\n" + "=" * 60)

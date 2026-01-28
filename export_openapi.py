@@ -3,8 +3,8 @@
 import sys
 from pathlib import Path
 
-import yaml
 import requests
+import yaml
 
 BASE_URL = "http://127.0.0.1:8080"
 OUTPUT_DIR = Path("openapi")

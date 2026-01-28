@@ -4,8 +4,8 @@ from collections import OrderedDict
 
 import yaml
 from aiohttp import web
-from aiohttp_apispec import setup_aiohttp_apispec
 from aiohttp.web import Application
+from aiohttp_apispec import setup_aiohttp_apispec
 
 
 def _convert_ordered_dict_to_dict(obj):
